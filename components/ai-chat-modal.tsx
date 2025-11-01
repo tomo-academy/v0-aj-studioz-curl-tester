@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { X, Send, MessageCircle } from "lucide-react"
+import { X, Send, MessageCircle, Copy, Check, Upload } from "lucide-react"
 
 interface ChatMessage {
   id: string
@@ -29,6 +29,7 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
   ])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -42,7 +43,6 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return
 
-    // Add user message
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       role: "user",
@@ -55,7 +55,6 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
     setIsLoading(true)
 
     try {
-      // Prepare messages for API
       const apiMessages = messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
@@ -64,8 +63,6 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
         role: "user",
         content: input,
       })
-
-      console.log("[v0] Sending chat request with", apiMessages.length, "messages")
 
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -81,7 +78,6 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
         throw new Error(data.error || "Failed to get response")
       }
 
-      // Add assistant response
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -90,11 +86,9 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
       }
 
       setMessages((prev) => [...prev, assistantMessage])
-      console.log("[v0] Received chat response successfully")
     } catch (error) {
       console.error("[v0] Chat error:", error)
 
-      // Add error message
       const errorMessage: ChatMessage = {
         id: (Date.now() + 2).toString(),
         role: "assistant",
@@ -108,11 +102,114 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
     }
   }
 
+  const extractCurlCommands = (text: string): { before: string; curl: string; after: string }[] => {
+    const parts: { before: string; curl: string; after: string }[] = []
+    const curlRegex = /```(?:bash|sh|shell|curl)?\s*(curl\s+[^`]+?)```/gs
+
+    let lastIndex = 0
+    let match
+
+    while ((match = curlRegex.exec(text)) !== null) {
+      const before = text.slice(lastIndex, match.index)
+      const curl = match[1].trim()
+      parts.push({ before, curl, after: "" })
+      lastIndex = match.index + match[0].length
+    }
+
+    if (parts.length > 0) {
+      parts[parts.length - 1].after = text.slice(lastIndex)
+    }
+
+    return parts.length > 0 ? parts : []
+  }
+
+  const handleCopyCode = (code: string, id: string) => {
+    navigator.clipboard.writeText(code)
+    setCopiedCode(id)
+    setTimeout(() => setCopiedCode(null), 2000)
+  }
+
+  const handleLoadCurl = (curl: string) => {
+    const textarea = document.querySelector("textarea[placeholder*='curl']") as HTMLTextAreaElement
+    if (textarea) {
+      textarea.value = curl
+      textarea.dispatchEvent(new Event("input", { bubbles: true }))
+      onClose()
+    }
+  }
+
+  const renderMessageContent = (message: ChatMessage) => {
+    const curlParts = extractCurlCommands(message.content)
+
+    if (curlParts.length > 0) {
+      return (
+        <div className="space-y-2">
+          {curlParts.map((part, idx) => (
+            <div key={idx}>
+              {part.before && (
+                <div className="text-sm whitespace-pre-wrap break-words mb-2">
+                  {formatText(part.before)}
+                </div>
+              )}
+              <div className="relative group">
+                <pre className="bg-black/80 text-green-400 p-3 rounded-lg text-xs font-mono overflow-x-auto border border-green-500/30">
+                  {part.curl}
+                </pre>
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => handleCopyCode(part.curl, `${message.id}-${idx}`)}
+                    className="p-1.5 bg-secondary hover:bg-secondary/80 rounded text-xs flex items-center gap-1"
+                    title="Copy curl command"
+                  >
+                    {copiedCode === `${message.id}-${idx}` ? (
+                      <Check className="w-3 h-3 text-green-400" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handleLoadCurl(part.curl)}
+                    className="p-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded text-xs flex items-center gap-1"
+                    title="Load in curl tester"
+                  >
+                    <Upload className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+              {part.after && (
+                <div className="text-sm whitespace-pre-wrap break-words mt-2">
+                  {formatText(part.after)}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    return <div className="text-sm whitespace-pre-wrap break-words">{formatText(message.content)}</div>
+  }
+
+  const formatText = (text: string) => {
+    // Format inline code
+    const parts = text.split(/(`[^`]+`)/)
+    return parts.map((part, idx) => {
+      if (part.startsWith("`") && part.endsWith("`")) {
+        return (
+          <code key={idx} className="bg-primary/20 text-primary px-1.5 py-0.5 rounded text-xs font-mono">
+            {part.slice(1, -1)}
+          </code>
+        )
+      }
+      return part
+    })
+  }
+
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <Card className="w-full max-w-2xl h-[600px] flex flex-col bg-card border border-border">
+      <Card className="w-full max-w-3xl h-[700px] flex flex-col bg-card border border-border shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border bg-background rounded-t-lg">
           <div className="flex items-center gap-2">
@@ -129,14 +226,14 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
           {messages.map((message) => (
             <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                className={`max-w-[85%] px-4 py-3 rounded-lg ${
                   message.role === "user"
                     ? "bg-primary text-primary-foreground rounded-br-none"
                     : "bg-secondary text-foreground rounded-bl-none border border-border"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
-                <span className="text-xs opacity-70 mt-1 block">
+                {renderMessageContent(message)}
+                <span className="text-xs opacity-70 mt-2 block">
                   {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
@@ -162,17 +259,22 @@ export default function AiChatModal({ isOpen, onClose }: AiChatModalProps) {
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
+                  handleSendMessage()
+                }
+              }}
               placeholder="Ask me about APIs, curl commands, HTTP methods, authentication..."
               className="flex-1 px-3 py-2 bg-input border border-border rounded text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm resize-none"
-              rows={1}
+              rows={2}
               disabled={isLoading}
             />
             <Button
               onClick={handleSendMessage}
               disabled={isLoading || !input.trim()}
               size="sm"
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 h-auto py-2"
             >
               <Send className="w-4 h-4" />
             </Button>
