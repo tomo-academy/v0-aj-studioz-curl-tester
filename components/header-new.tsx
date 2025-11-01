@@ -2,9 +2,11 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import AiChatModal from "./ai-chat-modal"
 
 export default function Header() {
   const [showShareModal, setShowShareModal] = useState(false)
+  const [showAIChat, setShowAIChat] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -15,13 +17,13 @@ export default function Header() {
       <header className="bg-card border-b border-border px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between flex-shrink-0">
         {/* Logo and Title */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-12 h-12 flex-shrink-0 circular-logo-glow overflow-hidden rounded-full bg-black flex items-center justify-center border-2 border-red-600">
+          <div className="w-12 h-12 flex-shrink-0 overflow-hidden rounded-full bg-black flex items-center justify-center border-2 border-red-600 shadow-lg shadow-red-500/50">
             <Image
               src="/aj-logo.png"
               alt="AJ STUDIOZ"
               width={48}
               height={48}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-full"
               priority
             />
           </div>
@@ -33,6 +35,22 @@ export default function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <button
+            onClick={() => setShowAIChat(true)}
+            className="hidden sm:flex items-center gap-2 px-3 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors font-medium text-sm"
+            title="Chat with AI Assistant"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+              />
+            </svg>
+            <span className="hidden md:inline">AI Chat</span>
+          </button>
+
           <button
             onClick={() => setShowShareModal(true)}
             className="hidden sm:flex items-center gap-2 px-3 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg transition-colors font-medium text-sm border border-border"
@@ -98,6 +116,9 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* AI Chat Modal */}
+      <AiChatModal isOpen={showAIChat} onClose={() => setShowAIChat(false)} />
     </>
   )
 }
