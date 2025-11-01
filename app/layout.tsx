@@ -11,12 +11,15 @@ export const metadata: Metadata = {
   description: "Test and debug API requests with AJ STUDIOZ - the professional online curl command testing platform",
   generator: "v0.app",
   icons: {
-    icon: {
-      url: "/favicon.png",
-      type: "image/png",
-      sizes: "any",
-    },
-    apple: "/favicon.png",
+    icon: [
+      {
+        url: "/aj-logo.png",
+        type: "image/png",
+        sizes: "any",
+      },
+    ],
+    apple: "/aj-logo.png",
+    shortcut: "/aj-logo.png",
   },
 }
 
@@ -28,7 +31,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/aj-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/aj-logo.png" />
+        <style>
+          {`
+            /* Make favicon appear circular */
+            link[rel="icon"],
+            link[rel="apple-touch-icon"] {
+              border-radius: 50%;
+            }
+          `}
+        </style>
       </head>
       <body className={`font-sans antialiased`}>{children}</body>
     </html>
