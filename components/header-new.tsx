@@ -2,11 +2,10 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import AiChatModal from "./ai-chat-modal"
+import { Sparkles, Share2, Link } from "lucide-react"
 
 export default function Header() {
   const [showShareModal, setShowShareModal] = useState(false)
-  const [showAIChat, setShowAIChat] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -35,72 +34,31 @@ export default function Header() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-1 md:gap-2 lg:gap-3 flex-shrink-0">
-          {/* Mobile AI Chat Button */}
-          <button
-            onClick={() => setShowAIChat(true)}
-            className="md:hidden p-2 hover:bg-secondary rounded-lg transition-colors"
-            title="Chat with AI Assistant"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-          </button>
-
-          {/* Desktop AI Chat Button */}
-          <button
-            onClick={() => setShowAIChat(true)}
-            className="hidden md:flex items-center gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors font-medium text-xs md:text-sm"
-            title="Chat with AI Assistant"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-            <span className="hidden lg:inline">AI Chat</span>
-          </button>
-
-          {/* Share Button - Hidden on mobile, compact on tablet */}
+          {/* Share Button */}
           <button
             onClick={() => setShowShareModal(true)}
-            className="hidden md:flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg transition-colors font-medium text-xs md:text-sm border border-border"
+            className="hidden md:flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-200 font-medium text-xs md:text-sm shadow-md hover:shadow-lg"
             title="Share this request"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8.684 13.342C9.589 12.438 10 11.414 10 10c0-1.414-.411-2.438-1.316-3.342m0 6.684c.822.822 1.316 1.847 1.316 3.342 0 1.495-.494 2.52-1.316 3.342m0-6.684l6-6m-6 12l6 6M9 1.318C5.134 5.182 3 8.159 3 12c0 4.478 3.582 8.333 8 8.333 1.59 0 3.119-.266 4.581-.748"
-              />
-            </svg>
+            <Share2 className="w-4 h-4" />
             <span className="hidden lg:inline">Share</span>
           </button>
 
-          {/* Copy Link Button - Always visible, compact on mobile */}
+          {/* Copy Link Button */}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors font-medium text-xs md:text-sm"
+            className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-all duration-200 font-medium text-xs md:text-sm shadow-md hover:shadow-lg"
             title="Copy link to clipboard"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-              />
-            </svg>
-            <span className="hidden md:inline">Copy</span>
+            <Link className="w-4 h-4" />
+            <span className="hidden md:inline">Copy Link</span>
           </button>
+
+          {/* Status Indicator */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg shadow-md">
+            <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+            <span className="text-xs font-medium">Online</span>
+          </div>
         </div>
       </header>
 
@@ -129,8 +87,6 @@ export default function Header() {
         </div>
       )}
 
-      {/* AI Chat Modal */}
-      <AiChatModal isOpen={showAIChat} onClose={() => setShowAIChat(false)} />
     </>
   )
 }

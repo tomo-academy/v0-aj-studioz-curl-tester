@@ -28,6 +28,15 @@ export default function CurlValidatorModal({
     try {
       const result = await validateAndFixCurl(curlCommand)
       setValidationResult(result)
+      
+      // Auto-apply fix if available and command has issues
+      if (result.suggestedFix && !result.isValid) {
+        setTimeout(() => {
+          onAcceptSuggestion(result.suggestedFix!)
+          setValidationResult(null)
+          onClose()
+        }, 2000) // Auto-apply after 2 seconds to show the user what was fixed
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Validation failed")
     } finally {
@@ -56,56 +65,92 @@ export default function CurlValidatorModal({
             </div>
           ) : (
             <div className="space-y-4">
-              <div>
-                <p className="text-sm font-semibold mb-2">Status:</p>
-                <p className={`text-sm font-mono ${validationResult.isValid ? "text-green-500" : "text-red-500"}`}>
-                  {validationResult.isValid ? "✓ Valid" : "✗ Invalid"}
-                </p>
-              </div>
-
-              {validationResult.issues.length > 0 && (
-                <div>
-                  <p className="text-sm font-semibold mb-2">Issues Found:</p>
-                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                    {validationResult.issues.map((issue: string, idx: number) => (
-                      <li key={idx}>{issue}</li>
-                    ))}
-                  </ul>
+              <div className={`p-4 rounded-lg border-2 ${
+                validationResult.isValid 
+                  ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700' 
+                  : 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-700'
+              }`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">
+                    {validationResult.isValid ? "✅" : "🤖"}
+                  </span>
+                  <span className={`font-bold text-lg ${
+                    validationResult.isValid ? 'text-green-700 dark:text-green-300' : 'text-blue-700 dark:text-blue-300'
+                  }`}>
+                    {validationResult.isValid ? 'Perfect cURL Command!' : 'AI Auto-Fixed Your Command!'}
+                  </span>
                 </div>
-              )}
-
-              <div>
-                <p className="text-sm font-semibold mb-2">Explanation:</p>
-                <p className="text-sm text-muted-foreground">{validationResult.explanation}</p>
+                
+                {validationResult.issues.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                      🔧 Fixed Issues:
+                    </p>
+                    <ul className="space-y-1">
+                      {validationResult.issues.map((issue: string, idx: number) => (
+                        <li key={idx} className="flex items-center gap-2 text-sm">
+                          <span className="text-green-500">✓</span>
+                          <span className="text-gray-600 dark:text-gray-400">{issue}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              {validationResult.suggestedFix && (
-                <div>
-                  <p className="text-sm font-semibold mb-2">Suggested Fix:</p>
-                  <Card className="bg-input border-border p-3 mb-3">
-                    <pre className="text-xs font-mono text-accent whitespace-pre-wrap break-words overflow-x-auto">
+              {validationResult.suggestedFix && !validationResult.isValid && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                    <span>✨</span>
+                    <span className="text-sm font-medium">
+                      Auto-applying fixed command in 2 seconds...
+                    </span>
+                  </div>
+                  <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-blue-200 dark:border-blue-700 p-4">
+                    <pre className="text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words overflow-x-auto">
                       {validationResult.suggestedFix}
                     </pre>
                   </Card>
-                  <Button
-                    onClick={() => {
-                      onAcceptSuggestion(validationResult.suggestedFix)
-                      setValidationResult(null)
-                      onClose()
-                    }}
-                    className="w-full bg-primary hover:bg-primary/90"
-                  >
-                    Accept & Use This Fix
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        onAcceptSuggestion(validationResult.suggestedFix)
+                        setValidationResult(null)
+                        onClose()
+                      }}
+                      className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                    >
+                      🪄 Apply Now
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => setValidationResult(null)}
+                      className="px-4"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {validationResult.isValid && (
+                <div className="text-center">
+                  <Button onClick={onClose} className="w-full bg-green-600 hover:bg-green-700 text-white">
+                    ✨ Awesome! Close
                   </Button>
                 </div>
               )}
 
-              <Button onClick={() => setValidationResult(null)} variant="outline" className="w-full">
-                Validate Again
-              </Button>
-              <Button onClick={onClose} variant="outline" className="w-full bg-transparent">
-                Close
-              </Button>
+              {!validationResult.isValid && !validationResult.suggestedFix && (
+                <div className="flex gap-2">
+                  <Button onClick={() => setValidationResult(null)} variant="outline" className="flex-1">
+                    Try Again
+                  </Button>
+                  <Button onClick={onClose} variant="outline" className="flex-1">
+                    Close
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
