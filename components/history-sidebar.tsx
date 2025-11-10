@@ -82,10 +82,10 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
       {/* Toggle Button (Mobile) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-4 right-4 z-40 p-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg"
+        className="lg:hidden fixed bottom-4 left-4 z-40 p-2.5 bg-secondary hover:bg-secondary/90 text-foreground rounded-full shadow-lg border border-border"
         title="Toggle history sidebar"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

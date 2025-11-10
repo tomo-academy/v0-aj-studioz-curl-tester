@@ -32,41 +32,44 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen w-screen bg-background text-foreground overflow-hidden">
       <Header />
-      {/* Main Content - Responsive split layout */}
+      {/* Main Content - Mobile-responsive layout */}
       <div className="flex flex-1 overflow-hidden bg-background">
         <HistorySidebar onSelectHistory={handleSelectHistory} />
 
-        {/* Left Panel - Curl Input */}
-        <div className="w-full lg:w-1/2 flex flex-col border-r border-border overflow-hidden">
-          <CurlExecutor
-            onResponse={(data) => {
-              setResponse(data)
-              if (window && (window as any).addCurlToHistory) {
-                const parsed = document.querySelector("textarea")?.value || ""
-                const url = requestData?.url || "unknown"
-                const method = requestData?.method || "GET"
-                ;(window as any).addCurlToHistory(parsed, method, url)
-              }
-            }}
-            onLoadingChange={setIsLoading}
-            onError={setError}
-            onRequestData={setRequestData}
-          />
-        </div>
+        {/* Mobile Layout - Vertical Stack */}
+        <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
+          {/* Curl Input Panel */}
+          <div className="flex flex-col h-1/2 lg:h-full lg:w-1/2 border-r-0 lg:border-r border-b lg:border-b-0 border-border overflow-hidden">
+            <CurlExecutor
+              onResponse={(data) => {
+                setResponse(data)
+                if (window && (window as any).addCurlToHistory) {
+                  const parsed = document.querySelector("textarea")?.value || ""
+                  const url = requestData?.url || "unknown"
+                  const method = requestData?.method || "GET"
+                  ;(window as any).addCurlToHistory(parsed, method, url)
+                }
+              }}
+              onLoadingChange={setIsLoading}
+              onError={setError}
+              onRequestData={setRequestData}
+            />
+          </div>
 
-        {/* Right Panel - Response Viewer */}
-        <div className="w-full lg:w-1/2 flex flex-col border-t lg:border-t-0 border-border overflow-hidden bg-card/30">
-          <ResponseViewerNew response={response} isLoading={isLoading} requestData={requestData} />
+          {/* Response Viewer Panel */}
+          <div className="flex flex-col h-1/2 lg:h-full lg:w-1/2 overflow-hidden bg-card/30">
+            <ResponseViewerNew response={response} isLoading={isLoading} requestData={requestData} />
+          </div>
         </div>
       </div>
 
-      {/* Floating AI Chat Button */}
+      {/* Floating AI Chat Button - Desktop only since mobile has header button */}
       <button
         onClick={() => setShowAIChat(true)}
-        className="fixed bottom-6 right-6 z-30 w-14 h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center group"
+        className="hidden md:flex fixed bottom-6 right-6 z-30 w-12 h-12 lg:w-14 lg:h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all items-center justify-center group"
         title="Chat with AI Assistant"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
