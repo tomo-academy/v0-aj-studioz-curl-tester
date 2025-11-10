@@ -78,68 +78,70 @@ export default function ResponseViewerNew({ response, isLoading, requestData }: 
   return (
     <div className="flex-1 flex flex-col bg-card border-t lg:border-t-0 lg:border-l border-border overflow-hidden min-h-0">
       {/* Top Status Bar - Always Visible */}
-      <div className="flex-shrink-0 border-b border-border p-3 sm:p-4 flex items-center justify-between bg-secondary/30">
-        <div className="flex items-center gap-3">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Status</p>
-            <p className={`text-sm sm:text-base font-bold ${getStatusColor(response.status)}`}>{response.status}</p>
+      <div className="flex-shrink-0 border-b border-border p-2 md:p-3 lg:p-4 bg-secondary/30">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="text-center md:text-left">
+              <p className="text-xs text-muted-foreground mb-0.5">Status</p>
+              <p className={`text-sm md:text-base font-bold ${getStatusColor(response.status)}`}>{response.status}</p>
+            </div>
+            <div className="w-px h-8 bg-border"></div>
+            <div className="text-center md:text-left">
+              <p className="text-xs text-muted-foreground mb-0.5">Size</p>
+              <p className="text-xs md:text-sm font-semibold text-foreground">{formatFileSize(response.size || 0)}</p>
+            </div>
+            <div className="w-px h-8 bg-border"></div>
+            <div className="text-center md:text-left">
+              <p className="text-xs text-muted-foreground mb-0.5">Time</p>
+              <p className="text-xs md:text-sm font-semibold text-foreground">{response.time || "N/A"}</p>
+            </div>
           </div>
-          <div className="hidden sm:block w-px h-8 bg-border"></div>
-          <div className="hidden sm:block">
-            <p className="text-xs text-muted-foreground mb-1">Size</p>
-            <p className="text-sm font-semibold text-foreground">{formatFileSize(response.size || 0)}</p>
-          </div>
-          <div className="hidden sm:block w-px h-8 bg-border"></div>
-          <div className="hidden sm:block">
-            <p className="text-xs text-muted-foreground mb-1">Time</p>
-            <p className="text-sm font-semibold text-foreground">{response.time || "N/A"}</p>
-          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setShowDetails(!showDetails)}
+            className="text-xs gap-1 h-auto p-1.5 md:p-2 hover:bg-primary/10 shrink-0"
+          >
+            <span className="hidden md:inline">Details</span>
+            <ChevronDown className={`w-3 h-3 md:w-4 md:h-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
+          </Button>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => setShowDetails(!showDetails)}
-          className="text-xs gap-1 h-auto p-2 hover:bg-primary/10"
-        >
-          View Details
-          <ChevronDown className={`w-4 h-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
-        </Button>
       </div>
 
       {/* Main Response Content - Bigger and at top */}
       <div className="flex-1 overflow-hidden flex flex-col min-h-0">
         <Tabs defaultValue="content" className="flex-1 flex flex-col overflow-hidden">
-          <TabsList className="bg-secondary border-b border-border w-full justify-start rounded-none overflow-x-auto">
-            <TabsTrigger value="content" className="text-xs sm:text-sm">
+          <TabsList className="bg-secondary border-b border-border w-full justify-start rounded-none overflow-x-auto px-1">
+            <TabsTrigger value="content" className="text-xs md:text-sm px-3 py-2">
               Content
             </TabsTrigger>
-            <TabsTrigger value="headers" className="text-xs sm:text-sm">
+            <TabsTrigger value="headers" className="text-xs md:text-sm px-3 py-2">
               Headers
             </TabsTrigger>
-            <TabsTrigger value="timing" className="text-xs sm:text-sm">
+            <TabsTrigger value="timing" className="text-xs md:text-sm px-3 py-2">
               Timing
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="content" className="flex-1 overflow-hidden mt-0 p-0">
-            <div className="p-3 sm:p-4 h-full overflow-y-auto flex flex-col">
+            <div className="p-2 md:p-3 lg:p-4 h-full overflow-y-auto flex flex-col min-h-0">
               <div className="flex justify-between items-center mb-2 pb-2 border-b border-border flex-shrink-0">
                 <p className="text-xs font-semibold text-muted-foreground">Response Body</p>
-                <Button size="sm" variant="ghost" onClick={handleCopy} className="text-xs gap-1 h-auto p-1">
+                <Button size="sm" variant="ghost" onClick={handleCopy} className="text-xs gap-1 h-auto p-1 shrink-0">
                   <Copy className="w-3 h-3" />
-                  {copied ? "Copied" : "Copy"}
+                  {copied ? "✓" : "Copy"}
                 </Button>
               </div>
-              <pre className="bg-input p-2 sm:p-3 rounded text-xs text-foreground font-mono whitespace-pre-wrap break-words flex-1 overflow-auto">
+              <pre className="bg-input p-2 md:p-3 rounded text-xs md:text-sm text-foreground font-mono whitespace-pre-wrap break-words flex-1 overflow-auto leading-relaxed touch-manipulation">
                 {typeof response.data === "string" ? response.data : JSON.stringify(response.data, null, 2)}
               </pre>
             </div>
           </TabsContent>
 
           <TabsContent value="headers" className="flex-1 overflow-hidden mt-0 p-0">
-            <div className="p-3 sm:p-4 h-full overflow-y-auto">
+            <div className="p-2 md:p-3 lg:p-4 h-full overflow-y-auto">
               <p className="text-xs font-semibold text-muted-foreground mb-2">Response Headers</p>
-              <pre className="bg-input p-2 sm:p-3 rounded text-xs text-muted-foreground font-mono whitespace-pre-wrap break-words">
+              <pre className="bg-input p-2 md:p-3 rounded text-xs md:text-sm text-muted-foreground font-mono whitespace-pre-wrap break-words leading-relaxed">
                 {Object.entries(response.headers || {})
                   .map(([key, value]) => `${key}: ${value}`)
                   .join("\n")}
@@ -148,14 +150,14 @@ export default function ResponseViewerNew({ response, isLoading, requestData }: 
           </TabsContent>
 
           <TabsContent value="timing" className="flex-1 overflow-hidden mt-0 p-0">
-            <div className="p-3 sm:p-4 h-full overflow-y-auto space-y-2">
+            <div className="p-2 md:p-3 lg:p-4 h-full overflow-y-auto space-y-2">
               <p className="text-xs font-semibold text-muted-foreground mb-3">Request Timing</p>
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between bg-input p-2 rounded">
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between bg-input p-2 md:p-3 rounded">
                   <span className="text-muted-foreground">Total Time:</span>
                   <span className="text-foreground font-semibold">{response.time || "N/A"}</span>
                 </div>
-                <p className="text-muted-foreground text-xs pt-2">
+                <p className="text-muted-foreground text-xs pt-2 leading-relaxed">
                   Detailed timing metrics not available in browser environment. Use curl with -w flag for detailed
                   timing.
                 </p>

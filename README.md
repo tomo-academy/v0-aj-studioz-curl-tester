@@ -1,4 +1,6 @@
-# AJ STUDIOZ curl tester
+# AJ STUDIOZ cURL Tester
+
+*Professional cURL Testing & API Client - Now with Perfect Mobile Responsiveness*
 
 *Automatically synced with your [v0.app](https://v0.app) deployments*
 
@@ -6,6 +8,23 @@
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/g0w0m7d9567)
 
 ## Overview
+
+AJ STUDIOZ cURL Tester is a professional-grade API testing tool with perfect mobile responsiveness. Features include:
+
+### ✨ Key Features
+- **Mobile-First Design**: Optimized for all screen sizes with tabbed interface on mobile
+- **Professional cURL Testing**: Full cURL command support with validation
+- **Real-time Response Viewer**: Formatted JSON, headers, and timing information  
+- **Request History**: Persistent history with easy access and management
+- **AI-Powered Assistant**: Built-in AI chat for help and suggestions
+- **Modern UI**: Dark theme with smooth animations and AJ STUDIOZ branding
+
+### 📱 Mobile Optimizations
+- **Responsive Layout**: Seamless switching between desktop split-view and mobile tabs
+- **Touch-Optimized**: All buttons and inputs designed for touch interaction
+- **Mobile-Safe Inputs**: Prevents zoom on focus with optimized font sizes
+- **Gesture Support**: Smooth scrolling and native mobile interactions
+- **PWA Ready**: Installable as a mobile app with custom icons
 
 This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
 Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).

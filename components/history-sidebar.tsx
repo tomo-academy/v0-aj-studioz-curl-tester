@@ -99,15 +99,15 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
       <div
         className={`${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static left-0 top-0 h-screen lg:h-[calc(100vh-80px)] w-64 bg-card border-r border-border z-40 lg:z-0 transition-transform flex flex-col overflow-hidden`}
+        } lg:translate-x-0 fixed lg:static left-0 top-0 h-screen lg:h-auto w-72 md:w-64 bg-card border-r border-border z-40 lg:z-0 transition-transform duration-300 ease-in-out flex flex-col overflow-hidden`}
       >
         {/* Header */}
-        <div className="p-4 border-b border-border bg-background">
+        <div className="p-3 md:p-4 border-b border-border bg-background flex-shrink-0">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-sm">Request History</h2>
+            <h2 className="font-semibold text-sm md:text-base">Request History</h2>
             <button
               onClick={() => setIsOpen(false)}
-              className="lg:hidden p-1 hover:bg-secondary rounded"
+              className="lg:hidden p-1.5 hover:bg-secondary rounded transition-colors"
               title="Close sidebar"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,30 +118,30 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
         </div>
 
         {/* History List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           {history.length === 0 ? (
-            <div className="p-4 text-center text-muted-foreground text-sm">
-              <p>No requests yet</p>
-              <p className="text-xs mt-2">Your request history will appear here</p>
+            <div className="p-3 md:p-4 text-center text-muted-foreground text-sm">
+              <p className="text-sm md:text-base">No requests yet</p>
+              <p className="text-xs mt-2 leading-relaxed">Your request history will appear here</p>
             </div>
           ) : (
-            <div className="p-3 space-y-2">
+            <div className="p-2 md:p-3 space-y-2">
               {history.map((item) => (
                 <Card
                   key={item.id}
-                  className="p-3 bg-input border-border hover:border-primary cursor-pointer transition-all group"
+                  className="p-2.5 md:p-3 bg-input border-border hover:border-primary cursor-pointer transition-all group active:scale-[0.98] touch-manipulation"
                   onClick={() => {
                     onSelectHistory(item.curl)
                     setIsOpen(false)
                   }}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="inline-block px-2 py-1 text-xs font-mono bg-primary/20 text-primary rounded">
+                    <span className="inline-block px-2 py-1 text-xs font-mono bg-primary/20 text-primary rounded font-medium">
                       {item.method}
                     </span>
-                    <span className="text-xs text-muted-foreground">{formatTime(item.timestamp)}</span>
+                    <span className="text-xs text-muted-foreground shrink-0">{formatTime(item.timestamp)}</span>
                   </div>
-                  <p className="text-xs text-foreground font-mono truncate mb-2 group-hover:text-primary transition-colors">
+                  <p className="text-xs text-foreground font-mono truncate mb-2 group-hover:text-primary transition-colors leading-relaxed">
                     {item.url}
                   </p>
                   <div className="flex gap-1">
@@ -150,17 +150,17 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
                         e.stopPropagation()
                         navigator.clipboard.writeText(item.curl)
                       }}
-                      className="flex-1 p-1 text-xs bg-secondary/50 hover:bg-secondary rounded transition-colors"
+                      className="flex-1 p-1.5 text-xs bg-secondary/50 hover:bg-secondary rounded transition-colors touch-manipulation"
                       title="Copy curl command"
                     >
-                      <Copy className="w-3 h-3 inline" /> Copy
+                      <Copy className="w-3 h-3 inline mr-1" /> Copy
                     </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
                         deleteItem(item.id)
                       }}
-                      className="p-1 text-xs bg-destructive/20 hover:bg-destructive/30 text-destructive rounded transition-colors"
+                      className="p-1.5 text-xs bg-destructive/20 hover:bg-destructive/30 text-destructive rounded transition-colors touch-manipulation"
                       title="Delete from history"
                     >
                       <Trash2 className="w-3 h-3" />
