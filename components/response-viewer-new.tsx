@@ -198,10 +198,12 @@ export default function ResponseViewerNew({ response, isLoading, requestData }: 
                     if (messages.length > 0) {
                       return messages.map((msg: any, idx: number) => (
                         <div key={idx}>
-                          <p className="text-xs font-semibold text-red-400 mb-1">
+                          <p className="text-xs font-semibold text-white mb-1">
                             {msg.type === 'reasoning' ? '🧠 Reasoning:' : '💬 Message:'}
                           </p>
-                          <p className="text-xs text-red-500 font-mono whitespace-pre-wrap break-words">
+                          <p className={`text-xs font-mono whitespace-pre-wrap break-words ${
+                            msg.type === 'reasoning' ? 'text-red-500' : 'text-yellow-400'
+                          }`}>
                             {msg.text}
                           </p>
                         </div>
