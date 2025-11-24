@@ -43,8 +43,8 @@ export default function Home() {
           onClick={() => setMobileView('curl')}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'curl'
-              ? 'bg-gray-600 text-white'
-              : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
+              ? 'bg-gray-200 text-gray-900'
+              : 'text-muted-foreground hover:bg-gray-700 hover:text-white'
           }`}
         >
           cURL Preview
@@ -53,8 +53,8 @@ export default function Home() {
           onClick={() => setMobileView('response')}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'response'
-              ? 'bg-gray-600 text-white'
-              : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
+              ? 'bg-gray-200 text-gray-900'
+              : 'text-muted-foreground hover:bg-gray-700 hover:text-white'
           }`}
         >
           Response
