@@ -111,16 +111,16 @@ export default function ResponseViewerNew({ response, isLoading, requestData }: 
       <div className="flex-1 overflow-hidden flex flex-col min-h-0">
         <Tabs defaultValue="content" className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="bg-secondary border-b border-border w-full justify-start rounded-none overflow-x-auto">
-            <TabsTrigger value="content" className="text-xs sm:text-sm">
+            <TabsTrigger value="content" className="text-xs sm:text-sm hover:bg-gray-600 hover:text-white transition-colors">
               Content
             </TabsTrigger>
-            <TabsTrigger value="headers" className="text-xs sm:text-sm">
+            <TabsTrigger value="headers" className="text-xs sm:text-sm hover:bg-gray-600 hover:text-white transition-colors">
               Headers
             </TabsTrigger>
-            <TabsTrigger value="timing" className="text-xs sm:text-sm">
+            <TabsTrigger value="timing" className="text-xs sm:text-sm hover:bg-gray-600 hover:text-white transition-colors">
               Timing
             </TabsTrigger>
-            <TabsTrigger value="ai-response" className="text-xs sm:text-sm text-red-500">
+            <TabsTrigger value="ai-response" className="text-xs sm:text-sm text-red-500 hover:bg-gray-600 hover:text-white transition-colors">
               AI's Response
             </TabsTrigger>
           </TabsList>

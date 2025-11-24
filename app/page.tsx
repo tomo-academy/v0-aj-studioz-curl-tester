@@ -44,7 +44,7 @@ export default function Home() {
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'curl'
               ? 'bg-primary text-primary-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+              : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
           }`}
         >
           cURL Preview
@@ -54,7 +54,7 @@ export default function Home() {
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'response'
               ? 'bg-primary text-primary-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+              : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
           }`}
         >
           Response
