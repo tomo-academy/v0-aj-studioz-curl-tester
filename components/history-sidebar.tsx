@@ -77,24 +77,13 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
     return `${days}d ago`
   }
 
+  // Export toggle function for parent component
+  useEffect(() => {
+    ;(window as any).toggleHistorySidebar = () => setIsOpen(!isOpen)
+  }, [isOpen])
+
   return (
     <>
-      {/* Toggle Button (Mobile) */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-4 right-4 z-40 p-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg"
-        title="Toggle history sidebar"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      </button>
-
       {/* Sidebar */}
       <div
         className={`${

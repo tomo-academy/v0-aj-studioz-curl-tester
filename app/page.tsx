@@ -28,9 +28,15 @@ export default function Home() {
     }
   }
 
+  const handleMenuClick = () => {
+    if ((window as any).toggleHistorySidebar) {
+      ;(window as any).toggleHistorySidebar()
+    }
+  }
+
   return (
-    <div className="flex flex-col h-screen w-screen bg-background text-foreground overflow-hidden fixed inset-0">
-      <Header />
+    <div className="flex flex-col h-screen w-screen bg-background text-foreground overflow-hidden">
+      <Header onMenuClick={handleMenuClick} />
       {/* Mobile Toggle Buttons */}
       <div className="lg:hidden flex border-b border-border bg-card">
         <button
