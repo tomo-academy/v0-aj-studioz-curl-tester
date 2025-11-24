@@ -113,7 +113,7 @@ export default function CurlExecutor({ onResponse, onLoadingChange, onError, onR
             value={curlCommand}
             onChange={(e) => handleCurlInput(e.target.value)}
             placeholder="curl -X GET https://api.example.com"
-            className="w-full h-full p-3 sm:p-4 bg-input border border-border rounded text-foreground placeholder-muted-foreground text-xs sm:text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-full p-3 sm:p-4 bg-input border-2 border-yellow-500 rounded text-foreground placeholder-muted-foreground text-xs sm:text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
           />
           {parseError && <p className="text-xs text-destructive mt-2">{parseError}</p>}
         </div>
