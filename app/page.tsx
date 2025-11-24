@@ -43,7 +43,7 @@ export default function Home() {
           onClick={() => setMobileView('curl')}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'curl'
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-gray-600 text-white'
               : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
           }`}
         >
@@ -53,7 +53,7 @@ export default function Home() {
           onClick={() => setMobileView('response')}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             mobileView === 'response'
-              ? 'bg-primary text-primary-foreground'
+              ? 'bg-gray-600 text-white'
               : 'text-muted-foreground hover:bg-gray-600 hover:text-white'
           }`}
         >
