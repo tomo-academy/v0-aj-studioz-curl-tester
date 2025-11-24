@@ -19,7 +19,7 @@ interface HistorySidebarProps {
 
 export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps) {
   const [history, setHistory] = useState<HistoryItem[]>([])
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
       <div
         className={`${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static left-0 top-0 h-screen lg:h-[calc(100vh-80px)] w-64 bg-card border-r border-border z-40 lg:z-0 transition-transform flex flex-col overflow-hidden`}
+        } lg:translate-x-0 fixed lg:static left-0 top-0 h-full lg:h-auto w-64 bg-card border-r border-border z-50 lg:z-0 transition-transform flex flex-col overflow-hidden`}
       >
         {/* Header */}
         <div className="p-4 border-b border-border bg-background">
@@ -188,7 +188,7 @@ export default function HistorySidebar({ onSelectHistory }: HistorySidebarProps)
       </div>
 
       {/* Mobile Overlay */}
-      {isOpen && <div className="lg:hidden fixed inset-0 z-30 bg-black/30" onClick={() => setIsOpen(false)} />}
+      {isOpen && <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setIsOpen(false)} />}
     </>
   )
 }
