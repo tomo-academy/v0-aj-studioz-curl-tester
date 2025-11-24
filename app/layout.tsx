@@ -41,10 +41,21 @@ export default function RootLayout({
             link[rel="apple-touch-icon"] {
               border-radius: 50%;
             }
+            
+            /* Fix mobile viewport height */
+            :root {
+              --vh: 1vh;
+            }
+            
+            @supports (-webkit-touch-callout: none) {
+              body {
+                height: -webkit-fill-available;
+              }
+            }
           `}
         </style>
       </head>
-      <body className={`font-sans antialiased overflow-hidden h-screen`}>{children}</body>
+      <body className={`font-sans antialiased overflow-hidden h-screen max-h-screen`} style={{ height: '100dvh' }}>{children}</body>
     </html>
   )
 }

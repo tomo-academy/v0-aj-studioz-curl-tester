@@ -35,7 +35,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-background text-foreground overflow-hidden">
+    <div className="flex flex-col w-screen bg-background text-foreground overflow-hidden" style={{ height: '100dvh', maxHeight: '100dvh' }}>
       <Header onMenuClick={handleMenuClick} />
       {/* Mobile Toggle Buttons */}
       <div className="lg:hidden flex border-b border-border bg-card">
